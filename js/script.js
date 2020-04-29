@@ -20,7 +20,7 @@ var menuLinks = [
 let mainEl =  document.querySelector('main');
 let topMenuEl = document.getElementById('top-menu');
 let subMenuEl = document.getElementById('sub-menu');
-let topMenuLinks = document.querySelectorAll('a');
+
 
 
 //Task 1
@@ -40,7 +40,7 @@ menuLinks.forEach( function (aTag) {
   topMenuEl.appendChild(aEl);
   return;
 });
-console.log(topMenuLinks);
+
 //Task 4
 subMenuEl.style.height=('100%');
 subMenuEl.style.backgroundColor=('var(--sub-menu-bg)');
@@ -48,7 +48,7 @@ subMenuEl.classList.add('flex-around');
 subMenuEl.style.position=('absolute');
 subMenuEl.style.top=('0');
 //task 5
-
+let topMenuLinks = document.querySelectorAll('a');
 var showingSubMenu = false;
 topMenuEl.addEventListener('click', topMenuClick);
 
@@ -57,22 +57,59 @@ function topMenuClick(evt) {
   
   if (evt.target.tagName !== 'A') 
      return;
-console.log(event.target.textContent);
-  if (evt.target.classList.contains("active")) {
+
+  if (evt.target.classList.contains('active')) {
     evt.target.classList.remove('active');
     showingSubMenu = false;
     subMenuEl.style.top= 0;
     return;
   }
-
-
     for(let i = 0; i < topMenuLinks.length; i++){
-        console.log('check');
       topMenuLinks[i].classList.remove('active');
     }
-
-  console.log(evt.target.classList.contains('active'));
+    if (evt.target)
       evt.target.classList.add('active');
-}
-// 5.5
 
+     menuLinks.forEach(function (sub){
+        if(sub.subLinks !== undefined) showingSubMenu = true;  else showingSubMenu = false;
+     })
+          
+     if ( showingSubMenu === true)  buildSubMenu();  else { subMenuEl.style.top=('0')}
+          
+          function buildSubMenu(i, j){
+            let currentLink;
+            currentContent = subMenuEl.querySelectorAll('a')
+            
+            if (currentContent.length !== 0 ) { currentContent.forEach(function (child){subMenuEl.removeChild(child);})} 
+            for(i = 0; i < menuLinks.length ;i++) { 
+              currentLink =menuLinks[i].text;
+              current = menuLinks[i];
+              if(evt.target.innerHTML===currentLink && evt.target.innerHTML !== "ABOUT"){
+                for(j =0;  j < current.subLinks.length ; j++) {
+       
+                  let subMenuObj = document.createElement('a');
+                  subMenuObj.textContent=current.subLinks[j].text;
+                  subMenuObj.setAttribute('href', current.subLinks[j].href);
+                  subMenuEl.appendChild(subMenuObj);
+                  subMenuEl.style.top=('100%');
+                  }
+
+               }
+              }
+              return; 
+          }
+}  
+  subMenuEl.addEventListener('click', subMenuClick);
+  function subMenuClick(evt) {
+      evt.preventDefault();
+      if (evt.target.tagName !== 'A') 
+      console.log(evt.target);
+ 
+      showingSubMenu = false;
+      subMenuEl.style.top=('0');
+      for(let i = 0; i < topMenuLinks.length; i++){
+        topMenuLinks[i].classList.remove('active');
+        if(evt.target.innerText === 'ABOUT')  mainEl.innerHTML = ("ABOUT"); else
+      mainEl.innerHTML=`<h1>${evt.target.innerText}</h1>`;
+  }
+  }
